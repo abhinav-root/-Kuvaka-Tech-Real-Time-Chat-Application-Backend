@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 import { StatusCodes } from "http-status-codes";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Document } from "mongoose";
 
+// Signup
 async function signup(req: Request, res: Response) {
   try {
     const { name, email, password } = req.body;
@@ -23,6 +25,18 @@ async function signup(req: Request, res: Response) {
   }
 }
 
+// Login
+async function login(req: Request, res: Response) {
+  try {
+    const user = req.user as Document<IUser>;
+    console.log({user})
+    const accessToken = getAccessToken({ id: user.id });
+    return res.status(StatusCodes.OK).json({ accessToken });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 function getAccessToken(payload: any): string {
   const JWT_SECRET = process.env.JWT_SECRET;
   if (!JWT_SECRET) {
@@ -31,4 +45,4 @@ function getAccessToken(payload: any): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
 }
 
-export { signup };
+export { signup, login };

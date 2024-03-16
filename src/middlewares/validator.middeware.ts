@@ -3,7 +3,6 @@ import { validationResult } from "express-validator";
 import { StatusCodes } from "http-status-codes";
 
 function validate(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body)
   const result = validationResult(req);
   if (!result.isEmpty()) {
     return res.status(StatusCodes.BAD_REQUEST).json(result.mapped());

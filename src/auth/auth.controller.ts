@@ -1,8 +1,9 @@
 import { Router } from "express";
 const router = Router();
-import { signup } from "./users.service";
+import { signup, login } from "./auth.service";
 import { body } from "express-validator";
 import validate from "../middlewares/validator.middeware";
+import passport from "passport";
 
 router.post(
   "/signup",
@@ -32,6 +33,6 @@ router.post(
   signup
 );
 
-router.post("/login");
+router.post("/login", passport.authenticate("local", {session: false}), login);
 
 export default router;
