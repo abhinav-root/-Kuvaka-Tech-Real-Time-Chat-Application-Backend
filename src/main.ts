@@ -5,11 +5,15 @@ import helmet from "helmet";
 import cors from "cors";
 import connectMongoDB from "./mongo";
 connectMongoDB();
+import usersController from "./users/users.controller"
 
 // global middlewares
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
+
+// routes
+app.use("/auth", usersController)
 
 const port = process.env.PORT;
 httpServer.listen(port, () =>
