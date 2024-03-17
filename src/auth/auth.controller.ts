@@ -7,15 +7,24 @@ import passport from "passport";
 
 router.post(
   "/signup",
-  body("name")
+  body("firstName")
     .notEmpty()
     .isString()
     .trim()
     .toLowerCase()
     .isLength({ min: 3 })
-    .withMessage("Name must be at least 3 characters")
+    .withMessage("firstName must be at least 3 characters")
     .isLength({ max: 15 })
-    .withMessage("Name cannot exceed 15 characters"),
+    .withMessage("firstName cannot exceed 15 characters"),
+  body("lastName")
+    .notEmpty()
+    .isString()
+    .trim()
+    .toLowerCase()
+    .isLength({ min: 3 })
+    .withMessage("lastName must be at least 3 characters")
+    .isLength({ max: 15 })
+    .withMessage("lastName cannot exceed 15 characters"),
   body("email")
     .notEmpty()
     .trim()
@@ -33,6 +42,10 @@ router.post(
   signup
 );
 
-router.post("/login", passport.authenticate("local", {session: false}), login);
+router.post(
+  "/login",
+  passport.authenticate("local", { session: false }),
+  login
+);
 
 export default router;

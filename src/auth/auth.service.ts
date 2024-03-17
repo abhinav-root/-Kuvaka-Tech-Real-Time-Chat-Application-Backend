@@ -8,7 +8,7 @@ import { Document } from "mongoose";
 // Signup
 async function signup(req: Request, res: Response) {
   try {
-    const { name, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res
@@ -16,7 +16,12 @@ async function signup(req: Request, res: Response) {
         .json({ message: "This email is already registered" });
     }
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = new User({ name, email, password: hashedPassword });
+    const user = new User({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
     await user.save();
     const accessToken = getAccessToken({ id: user.id });
     return res.status(StatusCodes.CREATED).json({ accessToken });
@@ -29,7 +34,7 @@ async function signup(req: Request, res: Response) {
 async function login(req: Request, res: Response) {
   try {
     const user = req.user as Document<IUser>;
-    console.log({user})
+    console.log({ user });
     const accessToken = getAccessToken({ id: user.id });
     return res.status(StatusCodes.OK).json({ accessToken });
   } catch (err) {

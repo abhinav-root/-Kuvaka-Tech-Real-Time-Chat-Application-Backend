@@ -1,7 +1,8 @@
 import { Schema, model } from "mongoose";
 
 export interface IUser {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   profileImageUrl: string;
@@ -9,7 +10,13 @@ export interface IUser {
 
 const userSchema = new Schema<IUser>(
   {
-    name: {
+    firstName: {
+      type: Schema.Types.String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
+    lastName: {
       type: Schema.Types.String,
       required: true,
       trim: true,
