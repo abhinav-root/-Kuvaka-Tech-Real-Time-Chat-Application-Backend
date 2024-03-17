@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   password: string;
   profileImageUrl: string;
+  friends: [];
 }
 
 const userSchema = new Schema<IUser>(
@@ -30,10 +31,15 @@ const userSchema = new Schema<IUser>(
       unique: true,
     },
     password: { type: Schema.Types.String, required: true },
-    profileImageUrl: { type: Schema.Types.String, default: null },
+    friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
+
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ firstName: 1 });
+userSchema.index({ lastName: 1 });
+userSchema.index({ firstName: 1, lastName: 1 });
 
 const User = model<IUser>("User", userSchema);
 
