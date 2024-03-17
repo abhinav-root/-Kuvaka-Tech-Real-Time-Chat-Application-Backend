@@ -7,8 +7,9 @@ import connectMongoDB from "./mongo";
 connectMongoDB();
 import authController from "./auth/auth.controller";
 import passport from "passport";
-import "./auth/strategies/passport-local.strategy"
-import "./auth/strategies/passport-jwt.strategy"
+import "./auth/strategies/passport-local.strategy";
+import "./auth/strategies/passport-jwt.strategy";
+import usersController from "./users/users.controller";
 
 // global middlewares
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(passport.initialize());
 
 // routes
 app.use("/auth", authController);
+app.use("/users", usersController);
 
 const port = process.env.PORT;
 httpServer.listen(port, () =>
