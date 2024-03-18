@@ -38,4 +38,37 @@ async function getAllFriends(req: Request, res: Response) {
   }
 }
 
-export { searchUsers, getAllFriends };
+async function addFriend(req: Request, res: Response) {
+  try {
+    const { _id } = req.user as Document<IUser>;
+    const { friendId } = req.body;
+    const friend = await User.findById(friendId).select("-password");
+    if (!friend) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "No user found with given friendId" });
+    }
+    const user = await User.findById(_id);
+    if (user?.friends.includes(friendId as never) || friend.friends.includes(_id as never)) {
+      return res
+        .status(StatusCodes.CONFLICT)
+        .json({ message: "This user is already a friend" });
+    }
+   
+    user?.friends.push(friend.id as never)
+    friend.friends.push(user?.id as never)
+
+    await user?.save();
+    await friend.save();
+
+    console.log({ user, friend });
+    return res.status(StatusCodes.CREATED).json({friend, message: "Friend addded successfully"})
+  } catch (err) {
+    console.log(err)
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+  }
+}
+
+export { searchUsers, getAllFriends, addFriend };
