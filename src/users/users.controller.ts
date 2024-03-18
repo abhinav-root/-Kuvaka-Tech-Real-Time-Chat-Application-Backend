@@ -1,7 +1,12 @@
 import { Router } from "express";
 const router = Router();
-import { addFriend, getAllFriends, searchUsers } from "./users.service";
-import { body, query } from "express-validator";
+import {
+  addFriend,
+  getAllFriends,
+  removeFriend,
+  searchUsers,
+} from "./users.service";
+import { body, param, query } from "express-validator";
 import validate from "../middlewares/validator.middeware";
 import passport from "passport";
 
@@ -25,6 +30,14 @@ router.post(
   body("friendId").isMongoId(),
   validate,
   addFriend
+);
+
+router.delete(
+  "/friends/:friendId",
+  passport.authenticate("jwt", { session: false }),
+  param("friendId").isMongoId(),
+  validate,
+  removeFriend
 );
 
 export default router;
